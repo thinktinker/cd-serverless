@@ -58,4 +58,78 @@ In AWS Lamda:
 Create a .github/workflows folder and > create new file in it called main.yml
 Update the main.yml to run the jobs in github actions.
 
+```yml
+name: CICD for Serverless Application
+run-name: ${{ github.actor }} is doing CICD for serverless application
 
+on:
+  push:
+    branches: [ main, "*"]
+
+jobs:
+  pre-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event"
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+    needs: pre-deploy
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Run Installation of Dependencies Commands
+        run: npm install
+```
+
+Further update main.yml to:
+
+```yml
+name: CICD for Serverless Application
+run-name: ${{ github.actor }} is doing CICD for serverless application
+
+on:
+  push:
+    branches: [ main, "*"]
+
+jobs:
+  pre-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event"
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+    needs: pre-deploy
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Run Installation of Dependencies Commands
+        run: npm install
+
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+```
