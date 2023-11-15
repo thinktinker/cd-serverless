@@ -7,3 +7,8 @@ git add .
 git commit -m "commit message"
 git push
 ```
+
+To initialise the node application
+```
+npm init
+```
