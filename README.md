@@ -23,3 +23,9 @@ Added new files
 - index.js
 - serverless.yml
 - .gitignore
+
+To test the serverless application using the installed plugin serverless-offline
+Ensure that is serverless.yml, the framework version value is wrapped between single quote '...'
+```
+sls offline start
+```
