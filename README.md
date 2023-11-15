@@ -12,3 +12,5 @@ To initialise the node application
 ```
 npm init
 ```
+
+Added index.js
