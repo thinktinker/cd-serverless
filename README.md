@@ -13,4 +13,13 @@ To initialise the node application
 npm init
 ```
 
-Added index.js
+Install serverless and serverless-offline
+```
+npm install serverless
+npm install serverless-offline --save-dev
+```
+
+Added new files
+- index.js
+- serverless.yml
+- .gitignore
